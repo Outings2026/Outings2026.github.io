@@ -1,1 +1,590 @@
-h1>Outings – coming soon</h1>
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outings – family events near you</title>
+<meta name="description" content="Find family-friendly events near you, filtered by price, distance and age.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#C2410C; --accent-dark:#9A3412;
+  --ink:#17181C; --ink-2:#3D4048; --muted:#5B5F68;
+  --ground:#F6F5F1; --surface:#fff; --line:#E7E4DD; --line-2:#DDDAD2; --soft:#F1EFEA;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent)}a:hover{color:var(--accent-dark)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:Outfit,Inter,sans-serif}
+
+/* Header */
+header{border-bottom:1px solid var(--line)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;padding-bottom:14px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.logo span{font-family:Outfit,Inter,sans-serif;font-weight:700;font-size:23px;letter-spacing:-.02em}
+.savedbtn{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);background:#fff;color:var(--ink);font:500 14px/1 Inter,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.savedbtn[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* Hero */
+.hero{padding-top:44px;padding-bottom:26px;display:flex;flex-direction:column;gap:20px}
+.hero h1{margin:0;font-weight:700;font-size:clamp(36px,5.2vw,62px);line-height:1.02;letter-spacing:-.03em}
+.hero p{margin:0;font-size:18px;line-height:1.5;color:var(--muted);max-width:640px}
+.search-row{display:flex;flex-wrap:wrap;gap:10px;max-width:860px}
+.field{display:flex;align-items:center;gap:12px;min-height:58px;padding:0 18px;background:#fff;border:1px solid var(--line-2);border-radius:16px;box-shadow:0 6px 20px -14px rgba(23,24,28,.35);cursor:text}
+.field input{flex:1;min-width:0;border:0;outline:none;background:transparent;font:400 17px Inter,sans-serif;color:var(--ink)}
+.field.pc{flex:0 1 250px}
+.field.q{flex:1 1 300px}
+.btn{min-height:58px;padding:0 22px;border-radius:16px;border:0;background:var(--accent);color:#fff;font:600 16px/1 Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--accent-dark)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line-2)}
+.btn.ghost:hover{border-color:var(--ink);background:#fff}
+.btn[disabled]{opacity:.6;cursor:progress}
+.seg-group{display:flex;gap:4px;padding:4px;background:#EDEBE5;border-radius:999px;align-self:flex-start;max-width:100%;overflow-x:auto}
+.seg{min-height:44px;padding:0 18px;border:0;border-radius:999px;background:transparent;color:#4A4E57;font:500 15px/1 Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.seg:hover{color:var(--ink)}
+.seg[aria-pressed="true"]{background:var(--ink);color:#fff}
+.form-msg{margin:0;font-size:14px;color:#B42318;min-height:1em}
+
+/* Layout */
+main{display:flex;flex-wrap:wrap;align-items:flex-start;gap:28px;padding-bottom:64px}
+aside{flex:1 1 260px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px}
+.results{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:18px}
+.side-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.side-head h2{margin:0;font-size:20px;font-weight:600}
+.filters{display:flex;flex-direction:column;gap:26px;margin-top:18px}
+.group{display:flex;flex-direction:column;gap:12px;border:0;margin:0;padding:0}
+.group-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.group label.t,.group legend{font-weight:600;font-size:15px;padding:0}
+.group legend{margin-bottom:12px}
+.val{font-size:14px;color:#4A4E57}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.ages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.chip{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);background:#fff;color:var(--ink);font:500 14px/1 Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .15s,border-color .15s,color .15s}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.hint{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.check{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-2);min-height:32px;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px;margin:0;cursor:pointer}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.textbtn{background:none;border:0;padding:0 4px;min-height:44px;color:var(--accent);font:600 14px/1 Inter,sans-serif;cursor:pointer}
+.textbtn:hover{text-decoration:underline}
+.filter-toggle{display:none}
+@media (max-width:820px){
+  .filter-toggle{display:inline-flex}
+  aside[data-open="false"] .filters{display:none}
+  .field.pc,.field.q{flex:1 1 100%}
+  .btn{flex:1 1 auto;justify-content:center}
+}
+
+/* Results */
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.count{margin:0;font-size:16px;color:#4A4E57}
+.count b{font-family:Outfit,Inter,sans-serif;font-weight:600;font-size:22px;color:var(--ink)}
+.sort{display:flex;align-items:center;gap:10px;font-size:14px;color:#4A4E57}
+.sort select{min-height:44px;padding:0 14px;border:1px solid var(--line-2);border-radius:12px;background:#fff;font:500 14px Inter,sans-serif;color:var(--ink);cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -14px rgba(23,24,28,.28)}
+.media{position:relative;height:150px;display:flex;align-items:center;justify-content:center;color:var(--ink);background:#E9E6DF}
+.media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.tile-outdoors{background:#D9EDDF}.tile-arts{background:#F3E1EC}.tile-shows{background:#E2E4F6}.tile-science{background:#DCECF2}.tile-sport{background:#F5EAD2}.tile-seasonal{background:#F6DFD7}.tile-other{background:#ECE8DF}
+.badge{position:absolute;top:12px;padding:6px 10px;border-radius:999px;font:600 12px/1 Inter,sans-serif;background:#fff;color:var(--ink);box-shadow:0 2px 8px -4px rgba(0,0,0,.3)}
+.badge.date{left:12px}.badge.price{right:12px}
+.badge.free{background:var(--accent);color:#fff}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.card h3{margin:0;font-weight:600;font-size:19px;line-height:1.2;letter-spacing:-.01em}
+.card h3 a{color:inherit;text-decoration:none}
+.card h3 a:hover{text-decoration:underline}
+.heart{width:44px;height:44px;flex:none;border-radius:999px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);margin:-4px -6px 0 0;transition:border-color .15s,color .15s,transform .15s}
+.heart:hover{border-color:var(--ink)}
+.heart:active{transform:scale(.92)}
+.heart[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+.heart[aria-pressed="true"] svg{fill:currentColor}
+.blurb{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
+.meta{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2);margin-top:auto}
+.meta div{display:flex;align-items:center;gap:8px}
+.meta svg{flex:none}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{padding:6px 10px;border-radius:999px;background:var(--soft);font-size:12px;font-weight:600;color:var(--ink)}
+.pill.light{font-weight:500;color:var(--ink-2)}
+.state{background:#fff;border:1px dashed #D3D0C7;border-radius:20px;padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.state h3{margin:0;font-size:22px;font-weight:600}
+.state p{margin:0;color:var(--muted);font-size:15px;max-width:420px;line-height:1.5}
+.skel{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;height:340px}
+.skel div{height:150px;background:linear-gradient(90deg,#EEECE6 25%,#F6F5F1 50%,#EEECE6 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="./">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#C2410C"/><path d="M10 20.5c2.2 2.6 4.6 3.5 7 3.5s4.8-.9 7-3.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="12.5" cy="13.5" r="2" fill="#fff"/><circle cx="21.5" cy="13.5" r="2" fill="#fff"/></svg>
+      <span>Outings</span>
+    </a>
+    <button class="savedbtn" id="savedBtn" aria-pressed="false">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+      Saved <b id="savedCount">0</b>
+    </button>
+  </div>
+</header>
+
+<section class="wrap hero">
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <h1>Family days out, sorted.</h1>
+    <p>Find what's on nearby that suits your budget and your kids' ages.</p>
+  </div>
+  <form class="search-row" id="locForm" novalidate>
+    <label class="field pc">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B5F68" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+      <span class="sr-only">Your postcode</span>
+      <input id="postcode" autocomplete="postal-code" placeholder="Your postcode" maxlength="10">
+    </label>
+    <button class="btn" type="submit" id="findBtn">Find events</button>
+    <button class="btn ghost" type="button" id="geoBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/></svg>
+      Use my location
+    </button>
+  </form>
+  <p class="form-msg" id="formMsg" role="alert"></p>
+  <label class="field q" style="max-width:860px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B5F68" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <span class="sr-only">Search events</span>
+    <input id="q" type="search" placeholder="Search events, venues or activities">
+  </label>
+  <div class="seg-group" role="group" aria-label="When" id="whenGroup"></div>
+</section>
+
+<main class="wrap">
+  <aside id="aside" data-open="false" aria-label="Filters">
+    <div class="side-head">
+      <h2>Filters</h2>
+      <div style="display:flex;align-items:center;gap:4px">
+        <button class="textbtn" id="clearBtn" hidden>Clear all</button>
+        <button class="chip filter-toggle" id="toggleBtn" aria-expanded="false" aria-controls="filters">Show</button>
+      </div>
+    </div>
+    <div class="filters" id="filters">
+      <div class="group">
+        <div class="group-head"><label class="t" for="price">Price per person</label><span class="val" id="priceVal">Any price</span></div>
+        <input id="price" type="range" min="0" max="30" step="1" value="30">
+        <div class="chips" id="pricePresets"></div>
+      </div>
+      <div class="group">
+        <div class="group-head"><label class="t" for="dist">Distance</label><span class="val" id="distVal">Any distance</span></div>
+        <input id="dist" type="range" min="1" max="25" step="1" value="25">
+        <div class="scale"><span>1 mi</span><span>25 mi</span></div>
+      </div>
+      <fieldset class="group">
+        <legend>Suitable for ages</legend>
+        <div class="chips ages" id="ageChips"></div>
+        <label class="check"><input type="checkbox" id="incUnknown" checked> Include events with no age listed</label>
+        <p class="hint">Pick every age in your group. Ages are taken from each listing and may be approximate, so check the event page.</p>
+      </fieldset>
+      <fieldset class="group" id="catGroup" hidden>
+        <legend>Type of event</legend>
+        <div class="chips" id="catChips"></div>
+      </fieldset>
+    </div>
+  </aside>
+
+  <section class="results" aria-label="Results">
+    <div class="toolbar">
+      <p class="count" id="count" aria-live="polite"></p>
+      <label class="sort">Sort by
+        <select id="sort">
+          <option value="soon">Soonest</option>
+          <option value="near">Nearest</option>
+          <option value="cheap">Lowest price</option>
+        </select>
+      </label>
+    </div>
+    <div id="out"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Event listings from <a href="https://www.skiddle.com" target="_blank" rel="noopener">Skiddle</a>. Postcode lookup by <a href="https://postcodes.io" target="_blank" rel="noopener">postcodes.io</a>. Always check details with the organiser before you go.</div>
+</footer>
+
+<script>
+/* ===== Settings ===== */
+const CONFIG = {
+  SKIDDLE_KEY: 'e98c959f6d6be4d309c1bc3da584c630',
+  // If Skiddle blocks requests from the browser, point this at a small proxy instead.
+  API_BASE: 'https://www.skiddle.com/api/v1/events/search/',
+  SEARCH_RADIUS: 25,   // miles (matches the distance slider max)
+  DAYS_AHEAD: 60,      // how far ahead "Any time" looks
+  MAX_PAGES: 3         // up to 300 events per search
+};
+
+/* ===== Static options ===== */
+const WHEN = [['any','Any time'],['today','Today'],['week','Next 7 days'],['month','Next 30 days']];
+const PRESETS = [[0,'Free'],[5,'£5'],[10,'£10'],[20,'£20'],[30,'Any']];
+const AGES = [['a0','0–2',0,2],['a3','3–5',3,5],['a6','6–8',6,8],['a9','9–12',9,12],['a13','13+',13,99]];
+const CATS = {
+  seasonal:'Festive', shows:'Music & shows', science:'Science & discovery',
+  sport:'Active & sport', arts:'Arts & crafts', outdoors:'Outdoors & animals', other:'Family fun'
+};
+const CAT_RULES = [
+  ['seasonal',/\b(christmas|xmas|santa|festive|grotto|elves?|reindeer|halloween|easter|bonfire|fireworks?|new year)\b/],
+  ['shows',/\b(panto|pantomime|theatre|theater|show|musical|puppets?|concert|music|sing(?:ing|along)?|circus|magic(?:ian)?|comedy|cinema|film|disco|rave|dance)\b/],
+  ['science',/\b(science|stem|dinosaurs?|museum|coding|space|stargazing|planet\w*|lab|robots?|discovery)\b/],
+  ['sport',/\b(football|swim\w*|climb\w*|skat\w*|run|fun run|gym\w*|trampolin\w*|sports?|bounce|inflatable|soft play|ninja|tennis)\b/],
+  ['arts',/\b(crafts?|art|arts|paint\w*|workshop|draw\w*|pottery|lego|bak\w*|decorat\w*|make|making)\b/],
+  ['outdoors',/\b(farm|park|walk|trail|garden|forest|woods?|woodland|zoo|animals?|nature|outdoor|owls?|birds?)\b/]
+];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const ICONS = {
+  outdoors:'<path d="M12 3l-6 8h4l-4 6h12l-4-6h4z"/><path d="M12 17v4"/>',
+  arts:'<path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A4.7 4.7 0 0 0 21 9.7C21 5.9 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',
+  shows:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  science:'<path d="M9 3h6"/><path d="M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3"/><path d="M7 15h10"/>',
+  sport:'<circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9"/><path d="M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"/><path d="M3 12h18"/>',
+  seasonal:'<path d="M12 2v20"/><path d="M3.3 7l17.4 10"/><path d="M20.7 7L3.3 17"/><path d="M9.5 3.5L12 6l2.5-2.5"/><path d="M9.5 20.5L12 18l2.5 2.5"/>',
+  other:'<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.3 2.2 2 3.5 2s2.5-.7 3.5-2"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/>'
+};
+
+/* ===== State ===== */
+const S = {
+  events: [], status: 'idle', error: '', place: '',
+  q: '', when: 'any', maxPrice: 30, maxDist: 25, ages: [], cats: [], incUnknown: true,
+  sort: 'soon', onlySaved: false, saved: load('outings.saved', {})
+};
+
+/* ===== Helpers ===== */
+const $ = id => document.getElementById(id);
+function load(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } }
+function store(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function safeUrl(u){ return /^https?:\/\//i.test(u || '') ? u : ''; }
+function stripHtml(h){ const d = new DOMParser().parseFromString(String(h || ''), 'text/html'); return (d.body.textContent || '').replace(/\s+/g,' ').trim(); }
+function ymd(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function startOfDay(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function miles(lat1, lon1, lat2, lon2){
+  const R = 3958.8, r = x => x * Math.PI / 180;
+  const a = Math.sin(r(lat2-lat1)/2)**2 + Math.cos(r(lat1))*Math.cos(r(lat2))*Math.sin(r(lon2-lon1)/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+/* ===== Reading Skiddle listings ===== */
+function parsePrice(r){
+  const ep = String(r.entryprice || '').toLowerCase();
+  const tp = r.ticketpricing || {};
+  const min = parseFloat(tp.minPrice), max = parseFloat(tp.maxPrice);
+  if (/\bfree\b/.test(ep)) return { min: 0, max: 0 };
+  if (isFinite(min) && (min > 0 || (isFinite(max) && max > 0))) return { min, max: isFinite(max) ? max : min };
+  const m = ep.match(/(\d+(?:\.\d{1,2})?)/);
+  if (m) return { min: parseFloat(m[1]), max: parseFloat(m[1]) };
+  if (isFinite(min) && min === 0 && ep === '' && r.tickets === false) return { min: 0, max: 0 };
+  return null;
+}
+function parseAges(text, minage){
+  let m;
+  const clamp = (a,b) => { a = Math.max(0, a); b = Math.min(99, b); return a <= b ? [a,b] : null; };
+  if ((m = text.match(/\b(?:ages?|aged)\s*(\d{1,2})\s*(?:-|–|to)\s*(\d{1,2})/))) return clamp(+m[1], +m[2]);
+  if ((m = text.match(/\b(\d{1,2})\s*(?:-|–|to)\s*(\d{1,2})\s*(?:years?|yrs?|year[- ]olds?)/))) return clamp(+m[1], +m[2]);
+  if ((m = text.match(/\b(?:ages?|aged)\s*(\d{1,2})\s*(?:\+|plus|and (?:over|up|above))/))) return clamp(+m[1], 99);
+  if ((m = text.match(/\b(\d{1,2})\s*(?:years?|yrs?)\s*(?:\+|plus|and (?:over|up|older))/))) return clamp(+m[1], 99);
+  if ((m = text.match(/\bunder\s*(\d{1,2})s?\b/))) return clamp(0, +m[1] - 1);
+  if (/\ball ages\b/.test(text)) return [0, 99];
+  if (/\b(babies|baby|newborns?)\b/.test(text)) return [0, 2];
+  if (/\btoddlers?\b/.test(text)) return [1, 4];
+  if (/\bpre-?school(?:ers)?\b/.test(text)) return [2, 5];
+  if (/\b(teens?|teenagers?)\b/.test(text)) return [13, 17];
+  const ma = parseInt(minage, 10);
+  if (ma > 0) return [ma, 99];
+  return null;
+}
+function inferCat(text){ for (const [id, re] of CAT_RULES) if (re.test(text)) return id; return 'other'; }
+
+function normalise(r, origin){
+  if (String(r.cancelled) === '1') return null;
+  const v = r.venue || {};
+  const lat = parseFloat(v.latitude), lng = parseFloat(v.longitude);
+  const dist = isFinite(lat) && isFinite(lng) ? miles(origin.lat, origin.lng, lat, lng) : null;
+  const desc = stripHtml(r.description);
+  const text = ((r.eventname || '') + ' ' + desc).toLowerCase();
+  let start = r.startdate ? new Date(r.startdate) : (r.date ? new Date(r.date + 'T00:00:00') : null);
+  if (start && isNaN(start)) start = null;
+  const day = start ? Math.round((startOfDay(start) - startOfDay(new Date())) / 864e5) : null;
+  const ot = r.openingtimes || {};
+  let time = '';
+  if (ot.doorsopen) time = ot.doorsopen + (ot.doorsclose ? ' – ' + ot.doorsclose : '');
+  else if (start && (start.getHours() || start.getMinutes())) time = start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  return {
+    id: String(r.id),
+    title: stripHtml(r.eventname) || 'Untitled event',
+    link: safeUrl(r.link),
+    image: safeUrl(r.largeimageurl || r.imageurl),
+    venue: [v.name, v.town].filter(Boolean).join(', '),
+    dist, day, start, time,
+    blurb: desc.length > 150 ? desc.slice(0, 147).replace(/\s+\S*$/, '') + '…' : desc,
+    price: parsePrice(r),
+    ages: parseAges(text, r.minage),
+    cat: inferCat(text),
+    search: text + ' ' + String(v.name || '').toLowerCase() + ' ' + String(v.town || '').toLowerCase()
+  };
+}
+
+/* ===== Fetching ===== */
+async function lookupPostcode(pc){
+  const clean = pc.trim().toUpperCase();
+  let res = await fetch('https://api.postcodes.io/postcodes/' + encodeURIComponent(clean));
+  if (res.ok){ const j = await res.json(); return { lat: j.result.latitude, lng: j.result.longitude, label: j.result.postcode }; }
+  res = await fetch('https://api.postcodes.io/outcodes/' + encodeURIComponent(clean.replace(/\s+/g,'')));
+  if (res.ok){ const j = await res.json(); return { lat: j.result.latitude, lng: j.result.longitude, label: j.result.outcode }; }
+  throw new Error("We couldn't find that postcode. Check it and try again.");
+}
+async function reverseLookup(lat, lng){
+  try{
+    const res = await fetch('https://api.postcodes.io/postcodes?lon=' + lng + '&lat=' + lat + '&limit=1');
+    const j = await res.json();
+    return j.result && j.result[0] ? j.result[0].outcode : 'your location';
+  }catch(e){ return 'your location'; }
+}
+async function fetchEvents(origin){
+  const today = new Date(), until = new Date(); until.setDate(until.getDate() + CONFIG.DAYS_AHEAD);
+  const all = [];
+  for (let page = 0; page < CONFIG.MAX_PAGES; page++){
+    const p = new URLSearchParams({
+      api_key: CONFIG.SKIDDLE_KEY, latitude: origin.lat, longitude: origin.lng, radius: CONFIG.SEARCH_RADIUS,
+      eventcode: 'KIDS', order: 'date', limit: 100, offset: page * 100,
+      minDate: ymd(today), maxDate: ymd(until), description: 1
+    });
+    let res;
+    try { res = await fetch(CONFIG.API_BASE + '?' + p.toString()); }
+    catch(e){ throw new Error("Couldn't reach Skiddle. Your connection may be down, or Skiddle may be blocking requests from this site."); }
+    if (!res.ok) throw new Error('Skiddle returned an error (' + res.status + '). Check the API key, or try again shortly.');
+    const j = await res.json();
+    if (j.error && j.error !== 0 && j.error !== '0') throw new Error('Skiddle: ' + (j.errormessage || 'request failed'));
+    const batch = Array.isArray(j.results) ? j.results : [];
+    all.push(...batch);
+    const total = parseInt(j.totalcount, 10);
+    if (batch.length < 100 || (isFinite(total) && all.length >= total)) break;
+  }
+  const seen = new Set();
+  return all.map(r => normalise(r, origin)).filter(e => e && !seen.has(e.id) && seen.add(e.id));
+}
+
+async function search(origin, label){
+  S.status = 'loading'; S.error = ''; S.place = label; render();
+  $('findBtn').disabled = $('geoBtn').disabled = true;
+  try { S.events = await fetchEvents(origin); S.status = 'ready'; }
+  catch(e){ S.status = 'error'; S.error = e.message; S.events = []; }
+  $('findBtn').disabled = $('geoBtn').disabled = false;
+  render();
+}
+
+/* ===== Filtering ===== */
+function filtered(){
+  const q = S.q.trim().toLowerCase();
+  const picked = AGES.filter(a => S.ages.includes(a[0]));
+  const list = S.events.filter(e => {
+    if (q && !e.search.includes(q) && !e.title.toLowerCase().includes(q)) return false;
+    if (S.when !== 'any' && e.day != null){
+      if (S.when === 'today' && e.day !== 0) return false;
+      if (S.when === 'week' && e.day > 7) return false;
+      if (S.when === 'month' && e.day > 30) return false;
+    }
+    if (S.maxPrice < 30 && (!e.price || e.price.min > S.maxPrice)) return false;
+    if (S.maxDist < 25 && (e.dist == null || e.dist > S.maxDist)) return false;
+    if (picked.length){
+      if (!e.ages){ if (!S.incUnknown) return false; }
+      else if (!picked.some(a => e.ages[0] <= a[3] && e.ages[1] >= a[2])) return false;
+    }
+    if (S.cats.length && !S.cats.includes(e.cat)) return false;
+    if (S.onlySaved && !S.saved[e.id]) return false;
+    return true;
+  });
+  const big = 1e9;
+  list.sort((a, b) => {
+    if (S.sort === 'near') return (a.dist ?? big) - (b.dist ?? big);
+    if (S.sort === 'cheap') return (a.price ? a.price.min : big) - (b.price ? b.price.min : big) || (a.day ?? big) - (b.day ?? big);
+    return (a.day ?? big) - (b.day ?? big) || (a.start && b.start ? a.start - b.start : 0);
+  });
+  return list;
+}
+function activeCount(){
+  return (S.q.trim() ? 1 : 0) + (S.when !== 'any') + (S.maxPrice < 30) + (S.maxDist < 25) + S.ages.length + S.cats.length + (S.onlySaved ? 1 : 0);
+}
+
+/* ===== Rendering ===== */
+function dateLabel(e){
+  if (e.day === 0) return 'Today';
+  if (e.day === 1) return 'Tomorrow';
+  if (!e.start) return 'Date TBC';
+  return DAYS[e.start.getDay()] + ' ' + e.start.getDate() + ' ' + MONTHS[e.start.getMonth()];
+}
+function priceLabel(p){
+  if (!p) return 'See price';
+  if (p.min === 0 && (!p.max || p.max === 0)) return 'Free';
+  const f = n => '£' + (n % 1 ? n.toFixed(2) : n);
+  return p.max > p.min ? 'From ' + f(p.min) : f(p.min);
+}
+function ageLabel(a){
+  if (!a) return 'Ages not listed';
+  if (a[0] === 0 && a[1] >= 99) return 'All ages';
+  if (a[1] >= 99) return 'Ages ' + a[0] + '+';
+  return 'Ages ' + a[0] + '–' + a[1];
+}
+const SVG = (inner, size, sw) => '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + sw + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+const HEART = '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>';
+
+function card(e){
+  const saved = !!S.saved[e.id];
+  const pl = priceLabel(e.price);
+  const media = SVG(ICONS[e.cat], 54, 1.4) +
+    (e.image ? '<img src="' + esc(e.image) + '" alt="" loading="lazy" onerror="this.remove()">' : '');
+  const title = e.link ? '<a href="' + esc(e.link) + '" target="_blank" rel="noopener">' + esc(e.title) + '</a>' : esc(e.title);
+  return '<article class="card">' +
+    '<div class="media tile-' + e.cat + '">' + media +
+      '<span class="badge date">' + esc(dateLabel(e)) + '</span>' +
+      '<span class="badge price' + (pl === 'Free' ? ' free' : '') + '">' + esc(pl) + '</span>' +
+    '</div>' +
+    '<div class="body">' +
+      '<div class="title-row"><h3>' + title + '</h3>' +
+        '<button class="heart" data-save="' + esc(e.id) + '" aria-pressed="' + saved + '" aria-label="' + (saved ? 'Remove ' : 'Save ') + esc(e.title) + '">' + SVG(HEART, 20, 1.8) + '</button></div>' +
+      (e.blurb ? '<p class="blurb">' + esc(e.blurb) + '</p>' : '') +
+      '<div class="meta">' +
+        (e.time ? '<div>' + SVG('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', 16, 1.8) + '<span>' + esc(e.time) + '</span></div>' : '') +
+        '<div>' + SVG('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>', 16, 1.8) +
+          '<span>' + esc(e.venue || 'Venue TBC') + (e.dist != null ? ' · ' + e.dist.toFixed(1) + ' mi' : '') + '</span></div>' +
+      '</div>' +
+      '<div class="pills"><span class="pill">' + esc(ageLabel(e.ages)) + '</span><span class="pill light">' + esc(CATS[e.cat]) + '</span></div>' +
+    '</div></article>';
+}
+function stateBox(icon, title, text, btn){
+  return '<div class="state">' + SVG(icon, 44, 1.5) + '<h3>' + esc(title) + '</h3><p>' + esc(text) + '</p>' + (btn || '') + '</div>';
+}
+
+function render(){
+  // Saved
+  const savedN = Object.keys(S.saved).length;
+  $('savedCount').textContent = savedN;
+  $('savedBtn').setAttribute('aria-pressed', S.onlySaved);
+
+  // Segments & chips
+  $('whenGroup').innerHTML = WHEN.map(([id, l]) => '<button class="seg" data-when="' + id + '" aria-pressed="' + (S.when === id) + '">' + l + '</button>').join('');
+  $('pricePresets').innerHTML = PRESETS.map(([v, l]) => '<button class="chip" data-price="' + v + '" aria-pressed="' + (S.maxPrice === v) + '">' + l + '</button>').join('');
+  $('ageChips').innerHTML = AGES.map(a => '<button class="chip" data-age="' + a[0] + '" aria-pressed="' + S.ages.includes(a[0]) + '">' + a[1] + '</button>').join('');
+  const present = Object.keys(CATS).filter(c => S.events.some(e => e.cat === c));
+  $('catGroup').hidden = present.length < 2;
+  $('catChips').innerHTML = present.map(c => '<button class="chip" data-cat="' + c + '" aria-pressed="' + S.cats.includes(c) + '">' + esc(CATS[c]) + '</button>').join('');
+
+  // Slider labels
+  $('price').value = S.maxPrice; $('dist').value = S.maxDist;
+  $('priceVal').textContent = S.maxPrice >= 30 ? 'Any price' : S.maxPrice === 0 ? 'Free only' : 'Up to £' + S.maxPrice;
+  $('distVal').textContent = S.maxDist >= 25 ? 'Any distance' : 'Within ' + S.maxDist + (S.maxDist === 1 ? ' mile' : ' miles');
+  const n = activeCount();
+  $('clearBtn').hidden = n === 0;
+  $('clearBtn').textContent = 'Clear all (' + n + ')';
+
+  // Results
+  const out = $('out');
+  if (S.status === 'idle'){
+    $('count').textContent = '';
+    out.innerHTML = stateBox('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+      'Where are you?', 'Enter your postcode or use your location to see family events near you.');
+    return;
+  }
+  if (S.status === 'loading'){
+    $('count').textContent = 'Finding events near ' + S.place + '…';
+    out.innerHTML = '<div class="grid">' + '<div class="skel"><div></div></div>'.repeat(6) + '</div>';
+    return;
+  }
+  if (S.status === 'error'){
+    $('count').textContent = '';
+    out.innerHTML = stateBox('<circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/>', 'Something went wrong', S.error,
+      '<button class="chip" aria-pressed="true" data-retry style="min-height:44px;padding:0 20px">Try again</button>');
+    return;
+  }
+  const list = filtered();
+  $('count').innerHTML = '<b>' + list.length + '</b> ' + (list.length === 1 ? 'event' : 'events') + ' near ' + esc(S.place);
+  if (!S.events.length){
+    out.innerHTML = stateBox('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>', 'No family events listed nearby',
+      'Skiddle has no family events within ' + CONFIG.SEARCH_RADIUS + ' miles for the next ' + CONFIG.DAYS_AHEAD + ' days. Try a nearby town or city postcode.');
+    return;
+  }
+  if (!list.length){
+    out.innerHTML = stateBox('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M8.5 11h5"/>', 'No events match those filters',
+      'Try going a bit further, raising the price, or picking more age groups.',
+      '<button class="chip" aria-pressed="true" data-clear style="min-height:44px;padding:0 20px">Clear all filters</button>');
+    return;
+  }
+  out.innerHTML = '<div class="grid">' + list.map(card).join('') + '</div>';
+}
+
+/* ===== Events ===== */
+let lastOrigin = null, lastLabel = '';
+$('locForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const pc = $('postcode').value.trim();
+  $('formMsg').textContent = '';
+  if (!pc){ $('formMsg').textContent = 'Enter a postcode, or use your location.'; return; }
+  try {
+    const o = await lookupPostcode(pc);
+    lastOrigin = o; lastLabel = o.label;
+    store('outings.postcode', pc);
+    search(o, o.label);
+  } catch(e){ $('formMsg').textContent = e.message || "We couldn't look up that postcode."; }
+});
+$('geoBtn').addEventListener('click', () => {
+  $('formMsg').textContent = '';
+  if (!navigator.geolocation){ $('formMsg').textContent = "Your browser can't share your location. Enter a postcode instead."; return; }
+  $('geoBtn').disabled = true;
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const o = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    const label = await reverseLookup(o.lat, o.lng);
+    lastOrigin = o; lastLabel = label;
+    if (label !== 'your location') $('postcode').value = label;
+    search(o, label);
+  }, () => { $('geoBtn').disabled = false; $('formMsg').textContent = "We couldn't get your location. Enter a postcode instead."; }, { timeout: 10000, maximumAge: 600000 });
+});
+$('q').addEventListener('input', e => { S.q = e.target.value; render(); });
+$('price').addEventListener('input', e => { S.maxPrice = +e.target.value; render(); });
+$('dist').addEventListener('input', e => { S.maxDist = +e.target.value; render(); });
+$('sort').addEventListener('change', e => { S.sort = e.target.value; render(); });
+$('incUnknown').addEventListener('change', e => { S.incUnknown = e.target.checked; render(); });
+$('savedBtn').addEventListener('click', () => { S.onlySaved = !S.onlySaved; render(); });
+$('toggleBtn').addEventListener('click', () => {
+  const open = $('aside').dataset.open !== 'true';
+  $('aside').dataset.open = open; $('toggleBtn').setAttribute('aria-expanded', open); $('toggleBtn').textContent = open ? 'Hide' : 'Show';
+});
+function clearAll(){ Object.assign(S, { q: '', when: 'any', maxPrice: 30, maxDist: 25, ages: [], cats: [], onlySaved: false }); $('q').value = ''; render(); }
+$('clearBtn').addEventListener('click', clearAll);
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('button'); if (!t) return;
+  const toggle = (arr, v) => arr.includes(v) ? arr.filter(x => x !== v) : arr.concat(v);
+  if (t.dataset.when){ S.when = t.dataset.when; render(); }
+  else if (t.dataset.price != null){ S.maxPrice = +t.dataset.price; render(); }
+  else if (t.dataset.age){ S.ages = toggle(S.ages, t.dataset.age); render(); }
+  else if (t.dataset.cat){ S.cats = toggle(S.cats, t.dataset.cat); render(); }
+  else if (t.dataset.save){
+    if (S.saved[t.dataset.save]) delete S.saved[t.dataset.save]; else S.saved[t.dataset.save] = true;
+    store('outings.saved', S.saved); render();
+  }
+  else if (t.hasAttribute('data-clear')) clearAll();
+  else if (t.hasAttribute('data-retry') && lastOrigin) search(lastOrigin, lastLabel);
+});
+
+/* ===== Start ===== */
+const savedPc = load('outings.postcode', '');
+render();
+if (savedPc){ $('postcode').value = savedPc; $('locForm').requestSubmit(); }
+</script>
+</body>
+</html>
